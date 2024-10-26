@@ -21,38 +21,71 @@
         </tr>
         {% for ferramenta in ferramentas %}
         <tr>
-            <td {% if ferramenta.status == 'on' %} id="on" {% else %} id="off" {% endif %} >{{ferramenta.id}}</td>
+            <td {% if ferramenta.status == 'on' %} class="on" {% else %} class="off" {% endif %} name="id">{{ferramenta.id}}</td>
             <td>{{ferramenta.nome}}</td>
         </tr>
         {% endfor %}
-
     </table>
 
     <script src="https://unpkg.com/html5-qrcode"></script>
+
     <script>
-        function domready(fn){
-            if (document.readyState === "complete" || document.readyState === "interactive"){
-                setTimeout(fn, 1)
+
+        function domready(fn) {
+            if (document.readyState === "complete" || document.readyState === "interactive") {
+                setTimeout(fn, 1);
+            } else {
+                document.addEventListener("DOMContentLoaded", fn);
             }
-            else{
-                document.addEventListener("DOMContentLoaded", fn)
-            }
-        }   
-        domready(function(){
-            var myqr = document.getElementById("cod")
-            var lastresult, countresult = 0
-            function onScanSuccess(decodetext, decodeesult){
-                if (decodetext !== lastresult){
-                    countresult++
-                    lastresult = decodetext
-                    myqr.innerHTML += `<tr><td>${countresult}</td><td>${decodetext}</td></tr>`
+        }
+    
+        domready(function () {
+            var myqr = document.getElementById("cod");
+            var lastresult = 0;
+    
+            function onScanSuccess(decodetext, decodeesult) {
+                if (decodetext !== lastresult) {
+
+                    lastresult = decodetext;
+
+                    var id = document.getElementsByName("id");
+                    var last_id = parseInt(id[id.length - 1].innerText) + 1;
+
+                    myqr.innerHTML += `<tr><td class="off">${last_id}</td><td>${decodetext}</td></tr>`
+
+                    fetch('/save_qr_data/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'X-CSRFToken': getCookie('csrftoken')
+                        },
+                        body: `decodetext=${encodeURIComponent(decodetext)}`
+                    })
+                    .then(response => response.json())
                 }
             }
+    
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+    
             var htmlscanner = new Html5QrcodeScanner(
-                'reader',{fps:10,qrbox:250})
-            
-            htmlscanner.render(onScanSuccess)
-        })
-    </script>
+                'reader', { fps: 10, qrbox: 250 }
+            );
+    
+            htmlscanner.render(onScanSuccess);
+        });
+    </script>    
 </body>
 </html>

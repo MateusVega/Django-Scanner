@@ -11,10 +11,10 @@ table, th, td {
     border-collapse: collapse;
 }
 
-#on{
+.on{
     background-color: green;
 }
 
-#off{
+.off{
     background-color: red;
 }
