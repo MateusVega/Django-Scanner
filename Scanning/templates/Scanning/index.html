@@ -11,9 +11,9 @@
     <h1 style="margin: 20px auto;">Leia QRCODES</h1>
     <div style="display: flex; justify-content: center;">
         <div id="reader" style="width: 500px;">
-
         </div>
     </div>
+    
     <table id="cod" style="margin: 20px auto">
         <tr>
             <th>Id</th>
@@ -29,7 +29,6 @@
     </table>
 
     <script src="https://unpkg.com/html5-qrcode"></script>
-
     <script>
         function domready(fn){
             if (document.readyState === "complete" || document.readyState === "interactive"){
@@ -39,11 +38,9 @@
                 document.addEventListener("DOMContentLoaded", fn)
             }
         }   
-
         domready(function(){
             var myqr = document.getElementById("cod")
             var lastresult, countresult = 0
-
             function onScanSuccess(decodetext, decodeesult){
                 if (decodetext !== lastresult){
                     countresult++
@@ -51,28 +48,11 @@
                     myqr.innerHTML += `<tr><td>${countresult}</td><td>${decodetext}</td></tr>`
                 }
             }
-
             var htmlscanner = new Html5QrcodeScanner(
                 'reader',{fps:10,qrbox:250})
             
             htmlscanner.render(onScanSuccess)
         })
-
-        $.ajax({
-        type: "GET",
-        url: '/my_def_in_view',
-        data: {
-            "result": result,
-        },
-        dataType: "json",
-        success: function (data) {
-            // any process in data
-            alert("successfull")
-        },
-        failure: function () {
-            alert("failure");
-        }
-    });
     </script>
 </body>
 </html>
