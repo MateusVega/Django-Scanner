@@ -10,3 +10,11 @@ table, th, td {
     border: 1px solid black;
     border-collapse: collapse;
 }
+
+#on{
+    background-color: green;
+}
+
+#off{
+    background-color: red;
+}

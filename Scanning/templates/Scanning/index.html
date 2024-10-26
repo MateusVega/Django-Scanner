@@ -19,6 +19,12 @@
             <th>Id</th>
             <th>Codigo</th>
         </tr>
+        {% for ferramenta in ferramentas %}
+        <tr>
+            <td {% if ferramenta.status == 'on' %} id="on" {% else %} id="off" {% endif %} >{{ferramenta.id}}</td>
+            <td>{{ferramenta.nome}}</td>
+        </tr>
+        {% endfor %}
 
     </table>
 
@@ -51,6 +57,22 @@
             
             htmlscanner.render(onScanSuccess)
         })
+
+        $.ajax({
+        type: "GET",
+        url: '/my_def_in_view',
+        data: {
+            "result": result,
+        },
+        dataType: "json",
+        success: function (data) {
+            // any process in data
+            alert("successfull")
+        },
+        failure: function () {
+            alert("failure");
+        }
+    });
     </script>
 </body>
 </html>

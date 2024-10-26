@@ -1,6 +1,6 @@
 from django.http import HttpResponse
-from django.template import loader
+from django.shortcuts import render
+from .models import ferramentas
 
 def scanning(request):
-    template = loader.get_template('Scanning/index.html')
-    return HttpResponse(template.render())
+    return render(request, 'Scanning/index.html', {'ferramentas': ferramentas.objects.all().values()})
